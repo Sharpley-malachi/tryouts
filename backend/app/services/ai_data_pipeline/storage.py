@@ -2,6 +2,7 @@ import os
 import json
 import dataclasses
 import datetime
+from ...utils.timezones import ensure_aware, now_utc
 from typing import Any, Dict, List, Optional
 from .core.types import PredictionSnapshot, FeedbackRecord, MarketCandle
 
@@ -34,7 +35,7 @@ class UnifiedStorage:
             "batch_id": batch_id,
             "data": data,
             "metadata": metadata,
-            "ingested_at": datetime.datetime.utcnow().isoformat()
+            "ingested_at": now_utc().isoformat()
         }
         path = os.path.join(self.bronze_dir, f"{batch_id}.json")
         with open(path, 'w') as f:
@@ -133,7 +134,7 @@ class UnifiedStorage:
         # Ensure query_time is timezone-aware to avoid comparing naive vs aware datetimes
         if query_time.tzinfo is None:
             try:
-                query_time = query_time.replace(tzinfo=datetime.timezone.utc)
+                query_time = ensure_aware(query_time)
             except Exception:
                 pass
 

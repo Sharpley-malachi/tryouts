@@ -1,5 +1,6 @@
 import uuid
 import datetime
+from ...utils.timezones import now_utc, ensure_aware
 from typing import Dict, List, Any
 from .storage import UnifiedStorage
 from .core.types import MarketCandle, PredictionSnapshot, FeedbackRecord
@@ -33,7 +34,7 @@ class DataPipelineAgent:
             processed_candles = []
             for row in rows:
                 try:
-                    ts = self._parse_time(row.get('time', str(datetime.datetime.utcnow())))
+                    ts = self._parse_time(row.get('time', str(now_utc())))
                     c = MarketCandle(
                         timestamp=ts,
                         open=float(row['open']),
@@ -61,7 +62,7 @@ class DataPipelineAgent:
         Freezes the universe for a prediction.
         """
         pred_id = f"PRED-{uuid.uuid4().hex[:6]}"
-        now = datetime.datetime.utcnow()
+        now = now_utc()
         
         # Snapshot current known state
         current_state = self.storage.query_state_at_time(symbol, now)
@@ -111,8 +112,8 @@ class DataPipelineAgent:
         return {"status": "CLOSED" if success else "ERROR", "result": result}
 
     def _parse_time(self, time_str):
-        if not time_str: return datetime.datetime.utcnow()
+        if not time_str: return now_utc()
         try:
             return datetime.datetime.fromisoformat(str(time_str).replace("Z", "+00:00"))
         except:
-            return datetime.datetime.utcnow()
+            return now_utc()
