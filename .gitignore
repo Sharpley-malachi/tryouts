@@ -1,0 +1,22 @@
+# Node modules
+frontend/node_modules/
+
+# Playwright and test artifacts
+frontend/test-results/
+frontend/playwright-report/
+
+# Python caches and envs
+__pycache__/
+*.py[cod]
+.venv/
+env/
+
+# Data pipeline storage (local only)
+data/pipeline_storage/
+
+# IDE / editor
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
