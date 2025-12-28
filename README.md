@@ -1,3 +1,57 @@
+# tryouts
+
+Run and test instructions for this repository.
+
+Backend (Python / FastAPI)
+
+- Create a virtual environment and install base deps:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\Activate.ps1 on Windows
+pip install -r backend/requirements-base.txt
+```
+
+- Optional heavy ML deps (local/dev only):
+
+```bash
+pip install -r backend/requirements-ml.txt
+```
+
+- Run the backend (from repo root):
+
+```bash
+PYTHONPATH=backend uvicorn app.main:app --reload --port 8000
+```
+
+- Run unit tests:
+
+```bash
+cd backend
+pytest -q
+```
+
+Frontend (Vite / React)
+
+- Install and run dev server:
+
+```bash
+cd frontend
+npm ci
+npm run dev
+```
+
+- E2E tests (Playwright):
+
+```bash
+cd frontend
+npx playwright install
+npx playwright test
+```
+
+CI notes
+
+- GitHub Actions workflow splits base dependencies and optional ML deps. E2E runs in a separate job.
 # Unified Strategic Engine
 
 ## Overview
